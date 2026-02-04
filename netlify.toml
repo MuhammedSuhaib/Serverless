@@ -3,5 +3,5 @@
 
 [[redirects]]
   from = "/*"
-  to = "/.netlify/MuhammadSuhaib/index"
+  to = "/.netlify/functions/index"
   status = 200
