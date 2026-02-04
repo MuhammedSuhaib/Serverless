@@ -1,7 +1,7 @@
 [build]
-  functions = "functions"
+  functions = "MuhammadSuhaib"
 
 [[redirects]]
   from = "/*"
-  to = "/.netlify/functions/index"
+  to = "/.netlify/MuhammadSuhaib/index"
   status = 200
