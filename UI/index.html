@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me - Portfolio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-left: 3px solid #007acc;
+            background-color: #f9f9f9;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        .loading {
+            text-align: center;
+            color: #666;
+        }
+        .error {
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>About Me - Full Stack Developer</h1>
+
+    <div id="loading" class="loading">Loading data...</div>
+    <div id="error" class="error" style="display: none;"></div>
+
+    <div id="aboutMe" class="section" style="display: none;">
+        <h2>About Me</h2>
+        <div id="bio-content"></div>
+    </div>
+
+
+    <div id="projects" class="section" style="display: none;">
+        <h2>Projects</h2>
+        <div id="projects-content"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'https://muhammadsuhaibapi.netlify.app';
+
+        async function fetchData() {
+            try {
+                // Use a CORS proxy to bypass CORS restrictions
+                const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+
+                // Try to fetch from the API using CORS proxy
+                const [aboutRes, projectsRes] = await Promise.all([
+                    fetch(CORS_PROXY + encodeURIComponent(`${API_BASE_URL}/about-me`)),
+                    fetch(CORS_PROXY + encodeURIComponent(`${API_BASE_URL}/projects`))
+                ]);
+
+                if (!aboutRes.ok || !projectsRes.ok) {
+                    throw new Error('Failed to fetch data from API');
+                }
+
+                const bioData = await aboutRes.json();
+                const projectsData = await projectsRes.json();
+
+                // Hide loading and show content
+                document.getElementById('loading').style.display = 'none';
+
+                // Display Bio/About Me
+                displayBio(bioData);
+                document.getElementById('aboutMe').style.display = 'block';
+
+                // Display Projects
+                displayProjects(projectsData);
+                document.getElementById('projects').style.display = 'block';
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+
+                // Show a helpful message about CORS limitations
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error').textContent = `Error loading data: ${error.message}. This is likely due to CORS restrictions.`;
+
+                // Show placeholder content to demonstrate the layout
+                showPlaceholderContent();
+            }
+        }
+
+        function showPlaceholderContent() {
+            // Show empty containers to maintain layout structure
+            document.getElementById('bio-content').innerHTML = '<p>No data loaded (due to CORS restrictions when opening locally)</p>';
+            document.getElementById('tech-content').innerHTML = '<p>No data loaded (due to CORS restrictions when opening locally)</p>';
+            document.getElementById('projects-content').innerHTML = '<p>No data loaded (due to CORS restrictions when opening locally)</p>';
+
+            // Show the sections even with placeholder content
+            document.getElementById('aboutMe').style.display = 'block';
+            document.getElementById('techStack').style.display = 'block';
+            document.getElementById('projects').style.display = 'block';
+        }
+
+        function displayBio(bioData) {
+            const bioDiv = document.getElementById('bio-content');
+
+            if (typeof bioData === 'object') {
+                let bioHTML = '<p><strong>Name:</strong> ' + (bioData.name || 'N/A') + '</p>';
+                bioHTML += '<p><strong>Role:</strong> ' + (bioData.role || 'N/A') + '</p>';
+                bioHTML += '<p><strong>Location:</strong> ' + (bioData.location || 'N/A') + '</p>';
+
+                if (bioData.summary) {
+                    bioHTML += '<p><strong>Summary:</strong> ' + bioData.summary + '</p>';
+                }
+
+                bioDiv.innerHTML = bioHTML;
+            } else {
+                bioDiv.innerHTML = '<p>' + bioData + '</p>';
+            }
+        }
+
+        function displayTechStack(techData) {
+            const techDiv = document.getElementById('tech-content');
+
+            if (Array.isArray(techData)) {
+                let techHTML = '<ul>';
+                techData.forEach(tech => {
+                    techHTML += '<li>' + tech + '</li>';
+                });
+                techHTML += '</ul>';
+                techDiv.innerHTML = techHTML;
+            } else if (typeof techData === 'object') {
+                let techHTML = '';
+
+                // Handle different possible structures
+                const keys = Object.keys(techData);
+
+                // If the object has numeric keys (like an array converted to object), treat as list
+                if (keys.length > 0 && !isNaN(keys[0])) {
+                    techHTML += '<ul>';
+                    keys.forEach(key => {
+                        const item = techData[key];
+                        if (typeof item === 'string') {
+                            techHTML += '<li>' + item + '</li>';
+                        } else if (typeof item === 'object' && item !== null) {
+                            // Try to find a property that contains the actual tech name
+                            if (item.name) {
+                                techHTML += '<li>' + item.name + '</li>';
+                            } else if (item.title) {
+                                techHTML += '<li>' + item.title + '</li>';
+                            } else if (item.skill) {
+                                techHTML += '<li>' + item.skill + '</li>';
+                            } else if (item.language) {
+                                techHTML += '<li>' + item.language + '</li>';
+                            } else {
+                                // As last resort, show all properties
+                                for (const prop in item) {
+                                    techHTML += '<li>' + item[prop] + '</li>';
+                                    break; // Just show first property
+                                }
+                            }
+                        } else {
+                            techHTML += '<li>' + String(item) + '</li>';
+                        }
+                    });
+                    techHTML += '</ul>';
+                } else {
+                    // Handle regular object structure
+                    for (const [key, value] of Object.entries(techData)) {
+                        if (Array.isArray(value)) {
+                            techHTML += '<h3>' + key.charAt(0).toUpperCase() + key.slice(1) + '</h3>';
+                            techHTML += '<ul>';
+                            value.forEach(item => {
+                                techHTML += '<li>' + item + '</li>';
+                            });
+                            techHTML += '</ul>';
+                        } else if (typeof value === 'string') {
+                            techHTML += '<h3>' + key.charAt(0).toUpperCase() + key.slice(1) + '</h3>';
+                            techHTML += '<p>' + value + '</p>';
+                        } else if (typeof value === 'object' && value !== null) {
+                            techHTML += '<h3>' + key.charAt(0).toUpperCase() + key.slice(1) + '</h3>';
+                            techHTML += '<ul>';
+                            for (const subKey in value) {
+                                techHTML += '<li>' + value[subKey] + '</li>';
+                            }
+                            techHTML += '</ul>';
+                        } else {
+                            techHTML += '<p><strong>' + key + ':</strong> ' + value + '</p>';
+                        }
+                    }
+                }
+                techDiv.innerHTML = techHTML;
+            } else {
+                techDiv.innerHTML = '<p>' + techData + '</p>';
+            }
+        }
+
+        function displayProjects(projectsData) {
+            const projectsDiv = document.getElementById('projects-content');
+
+            if (Array.isArray(projectsData)) {
+                let projectsHTML = '<div>';
+                projectsData.forEach(project => {
+                    projectsHTML += '<div style="margin-bottom: 20px;">';
+                    projectsHTML += '<h3>' + (project.title || project.name || 'Untitled Project') + '</h3>';
+
+                    if (project.description) {
+                        projectsHTML += '<p><strong>Description:</strong> ' + project.description + '</p>';
+                    }
+
+                    if (project.tech) {
+                        projectsHTML += '<p><strong>Technologies:</strong> ' + (Array.isArray(project.tech) ? project.tech.join(', ') : project.tech) + '</p>';
+                    }
+
+                    if (project.link) {
+                        projectsHTML += '<p><strong>Link:</strong> <a href="' + project.link + '" target="_blank">' + project.link + '</a></p>';
+                    }
+
+                    projectsHTML += '</div>';
+                });
+                projectsHTML += '</div>';
+                projectsDiv.innerHTML = projectsHTML;
+            } else {
+                projectsDiv.innerHTML = '<p>' + projectsData + '</p>';
+            }
+        }
+
+        // Load data when page loads
+        window.addEventListener('DOMContentLoaded', fetchData);
+    </script>
+</body>
+</html>
