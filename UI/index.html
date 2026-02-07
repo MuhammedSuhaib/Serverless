@@ -56,13 +56,26 @@
 
         async function fetchData() {
             try {
-                // Use a CORS proxy to bypass CORS restrictions
-                const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+                // Determine if we're running in Docker environment (served from port 8080 by nginx)
+                const isDocker = window.location.port === '8080';
 
-                // Try to fetch from the API using CORS proxy
+                let API_BASE_URL;
+                if (isDocker) {
+                    // When running in Docker through nginx, use the proxy path
+                    API_BASE_URL = '/api'; // This will be proxied to the backend service
+                } else {
+                    // For local development, use CORS proxy
+                    API_BASE_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://muhammadsuhaibapi.netlify.app');
+                }
+
+                // Try to fetch from the API
+                const [aboutEndpoint, projectsEndpoint] = isDocker
+                    ? [`${API_BASE_URL}/about-me`, `${API_BASE_URL}/projects`]
+                    : [`${API_BASE_URL}&path=/about-me`, `${API_BASE_URL}&path=/projects`];
+
                 const [aboutRes, projectsRes] = await Promise.all([
-                    fetch(CORS_PROXY + encodeURIComponent(`${API_BASE_URL}/about-me`)),
-                    fetch(CORS_PROXY + encodeURIComponent(`${API_BASE_URL}/projects`))
+                    fetch(aboutEndpoint),
+                    fetch(projectsEndpoint)
                 ]);
 
                 if (!aboutRes.ok || !projectsRes.ok) {
@@ -86,13 +99,43 @@
             } catch (error) {
                 console.error('Error fetching data:', error);
 
-                // Show a helpful message about CORS limitations
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('error').style.display = 'block';
-                document.getElementById('error').textContent = `Error loading data: ${error.message}. This is likely due to CORS restrictions.`;
+                // Fallback to external API with CORS proxy if internal fails
+                try {
+                    const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+                    const EXTERNAL_API_BASE_URL = 'https://muhammadsuhaibapi.netlify.app';
 
-                // Show placeholder content to demonstrate the layout
-                showPlaceholderContent();
+                    const [aboutRes, projectsRes] = await Promise.all([
+                        fetch(CORS_PROXY + encodeURIComponent(`${EXTERNAL_API_BASE_URL}/about-me`)),
+                        fetch(CORS_PROXY + encodeURIComponent(`${EXTERNAL_API_BASE_URL}/projects`))
+                    ]);
+
+                    if (!aboutRes.ok || !projectsRes.ok) {
+                        throw new Error('Failed to fetch data from external API');
+                    }
+
+                    const bioData = await aboutRes.json();
+                    const projectsData = await projectsRes.json();
+
+                    // Hide loading and show content
+                    document.getElementById('loading').style.display = 'none';
+
+                    // Display Bio/About Me
+                    displayBio(bioData);
+                    document.getElementById('aboutMe').style.display = 'block';
+
+                    // Display Projects
+                    displayProjects(projectsData);
+                    document.getElementById('projects').style.display = 'block';
+
+                } catch (fallbackError) {
+                    console.error('Fallback also failed:', fallbackError);
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('error').style.display = 'block';
+                    document.getElementById('error').textContent = `Error loading data: ${fallbackError.message}`;
+
+                    // Show placeholder content to demonstrate the layout
+                    showPlaceholderContent();
+                }
             }
         }
 
