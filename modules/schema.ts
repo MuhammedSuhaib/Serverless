@@ -19,6 +19,8 @@ export interface Project {
     title: string;
     description: string;
     image: string;
+    skills: string[];
+    role: string;
 }
 
 export interface TechSkill {
