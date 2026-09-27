@@ -33,7 +33,7 @@ export const projects: Project[] = [
     title: "secure PWA chat",
     description:
       "A production-grade, privacy-first messaging platform demonstrating end-to-end encryption engineering, real-time systems design, and modern full-stack architecture (Next.js 15 + Firebase). Implements client-side AES-GCM encryption via the Web Crypto API, PBKDF2 key derivation, real-time Firestore sync, voice/media messaging, and PWA installability",
-    image: "/cyber.png",
+    image: "/cybertalk.png",
     skills: ["Next.js", "Firebase", "Tailwind CSS", "PWA"],
     role: "JAM Developer",
   },
@@ -42,7 +42,7 @@ export const projects: Project[] = [
     title: "Ping Cold Starts",
     description:
       "Prevent free-tier cold starts. Open-source keep-alive registry that pings Hugging Face, Streamlit, Render & Koyeb via GitHub Actions cron. Zero cost. Zero gatekeeping",
-    image: "/todos.png",
+    image: "/Ping-cold-start.png",
     skills: ["React", "Tailwind CSS", "Nelify Blob"],
     role: "Devops Developer",
   },
