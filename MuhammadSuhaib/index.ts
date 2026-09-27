@@ -1,11 +1,16 @@
 import express, { Router } from 'express';
 import serverless from 'serverless-http';
+import cors from 'cors';
 import { bio } from '../modules/bio';
 import { projects } from '../modules/projects';
-import { techStack } from '../modules/techStack'; 
+import { techStack } from '../modules/techStack';
 import { timeline } from '../modules/timeLine';
+
 const app = express();
 const router = Router();
+
+// Enable CORS for all origins
+app.use(cors());
 
 // --- API ROUTES ---
 
