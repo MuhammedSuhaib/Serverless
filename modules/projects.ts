@@ -38,15 +38,6 @@ export const projects: Project[] = [
     role: "JAM Developer",
   },
   {
-    link: `https://ping-cold-starts.netlify.app/`,
-    title: "Ping Cold Starts",
-    description:
-      "Prevent free-tier cold starts. Open-source keep-alive registry that pings Hugging Face, Streamlit, Render & Koyeb via GitHub Actions cron. Zero cost. Zero gatekeeping",
-    image: "/Ping-cold-start.png",
-    skills: ["React", "Tailwind CSS", "Nelify Blob"],
-    role: "Devops Developer",
-  },
-  {
     link: `https://muhammedsuhaib-giaiclinkedinposts.hf.space/`,
     title: "AI Agent (Gemini + OpenAI)",
     description:
@@ -98,14 +89,6 @@ export const projects: Project[] = [
       "A resume builder with interactive features using pure HTML and CSS.",
     image: "/resume.jpeg",
     skills: ["HTML", "CSS"],
-    role: "Frontend Developer",
-  },
-  {
-    link: `https://instagrem-com.netlify.app/`,
-    title: "Instagram Attack",
-    description: "A fun project demonstrating security vulnerabilities.",
-    image: "/ig.png",
-    skills: ["HTML", "CSS", "JavaScript"],
     role: "Frontend Developer",
   },
   {
@@ -179,14 +162,6 @@ export const projects: Project[] = [
     role: "Frontend Developer",
   },
   {
-    link: `https://muhammedsuhaib.github.io/Resume_Builder/HACKATHON-Milestone-1-2/index.html`,
-    title: "static Resume Builder",
-    description: "A static resume  using pure HTML and CSS.",
-    image: "/plain.png",
-    skills: ["HTML", "CSS"],
-    role: "Frontend Developer",
-  },
-  {
     link: `https://heto-ui-clone.netlify.app/`,
     title: "Pixel-Perfect E-commerce Clone",
     description:
@@ -194,50 +169,6 @@ export const projects: Project[] = [
     image: "/px.jpeg",
     skills: ["HTML", "CSS", "JavaScript"],
     role: "Frontend Developer",
-  },
-  {
-    link: `https://github.com/MuhammedSuhaib/1stfigmaClone.git`,
-    title: "Jewelry Website Clone",
-    description: "A pixel-perfect Figma-based jewelry website clone.",
-    image: "/clone-img.webp",
-    skills: ["HTML", "CSS", "Figma"],
-    role: "Frontend Developer",
-  },
-  {
-    link: `https://push-notifcation-splitter.streamlit.app`,
-    title: "Smartband Exam Hack",
-    description:
-      "A notification splitter tool designed to bypass exam restrictions using smartbands.",
-    image: "/smartband.jpeg",
-    skills: ["Streamlit", "Python"],
-    role: "Python Developer",
-  },
-  {
-    link: `https://share.streamlit.io/user/muhammedsuhaib`,
-    title: "All Streamlit Projects",
-    description:
-      "Collection of Streamlit apps built for learning and experimenting.",
-    image: "/streamlit.jpeg",
-    skills: ["Streamlit", "Python"],
-    role: "Python Developer",
-  },
-  {
-    link: `https://growthmindsetbysirzia.streamlit.app`,
-    title: "Growth Mindset Challenge",
-    description:
-      "A motivational app built using Streamlit to promote growth mindset.",
-    image: "/growth.jpeg",
-    skills: ["Streamlit", "Python"],
-    role: "Python Developer",
-  },
-  {
-    link: `https://readable-password-generator.streamlit.app`,
-    title: "Readable Password Generator",
-    description:
-      "Generates secure, easy-to-remember passwords using Streamlit.",
-    image: "/password.jpeg",
-    skills: ["Streamlit", "Python"],
-    role: "Python Developer",
   },
   {
     link: `https://muhammedsuhaib.github.io/markdownResume/`,
